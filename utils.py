@@ -168,7 +168,7 @@ def summarize(text):
         It summarizes our text
     '''
     global model
-    result = model(text, min_length=round(len(text.split())*(0.40)))
+    result = model(text, min_length=round(len(text.split())*(0.30)))
     full = ''.join(result)
     return full
 

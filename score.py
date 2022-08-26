@@ -148,7 +148,7 @@ def readabilityScore(text):
 
   scoreMatrix = [fre, fkg, si, cli, ari, dcrs, lwf, gf, mce]
 
-  score = round((fre + fkg + si + cli + ari + dcrs + lwf + gf + 1.5*mce)/(8+1.5))
+  score = int((fre + fkg + si + cli + ari + dcrs + lwf + gf + mce)/(9))
 #   print("AVG :: ", avg)
 
   #   #grade level of english text (less)

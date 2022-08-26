@@ -1,5 +1,7 @@
-import utils, scraper, report
-from flask import Flask, request, jsonify
+import utils, scraper, report, json
+from flask import Flask, request
+from firebase import firebase
+firebase = firebase.FirebaseApplication('https://sih2022-d8dd2-default-rtdb.asia-southeast1.firebasedatabase.app/', authentication=None)
 
 app = Flask(__name__)
 
@@ -7,17 +9,33 @@ app = Flask(__name__)
 def genReport():
     #?url=
     url = request.args.get('url')
-    web_html = utils.getHTML(url)
-    qna = utils.divideIntoQnA(web_html)
+    #?id=
+    id = request.args.get('id')
 
-    return (report.generate_report(qna))
+    try:
+        web_html = utils.getHTML(url)
+        qna = utils.divideIntoQnA(web_html)
+        output = report.generate_report(qna)
+        firebase.put('/privacy/'+id, 'data', json.dumps(output))
+        firebase.put('/privacy/'+id, 'status', 'DONE')
+    except:
+        firebase.put('/privacy/'+id, 'status', 'ERROR')
+    return "True"
 
 
 @app.route("/api2/", methods=['GET'])
 def scaperApi():
     #?url=
     url = request.args.get('url')
-    return scraper.scrap(url)
+    #?id=
+    id = request.args.get('id')
+    try:
+        output2 = scraper.scrap(url)
+        firebase.put('/gdpr/'+id, 'data', json.dumps(output2))
+        firebase.put('/gdpr/'+id, 'status', 'DONE')
+    except:
+        firebase.put('/gdpr/'+id, 'status', 'ERROR')
+    return "True"
 
 if __name__ == '__main__':
     app.run(debug=True, host="172.16.4.24")

@@ -42,12 +42,30 @@ def generate_report(qna, state=0):
 
     # print(scores_qna)
 
-    report = dict({ 'status':'DONE',
-                    'time':round(time/60),
+    #### map risk to images_di and send movie name and images_di
+    # f = open('images_di.json')
+    # data = json.load(f)
+
+    # print(data)
+
+    l = ['A Shaun the Sheep', 'Minions', 'Boss Baby', 'Toy Story', 'Finding Nemo', 'Stuart Little', 'Sholay', 'Charlie and the Chocolate Factory', 'Star Wars', 'Jumanji', 'Badla', 'Forrest Gump', 'Lucy', 'Parasite', 'Matrix', 'Inception', 'Interstellar']
+    index_movie = round((total_score/max_score)*17)
+    if(index_movie > 17):
+        mov = l[17]
+    mov = l[index_movie]
+
+    try:
+        per = round((total_score/max_score)*100)
+    except:
+        per = total_score
+
+    report = dict({ 'time':round(time/60),
                     'flags': flags,
                     'date':str(date),
                     'totalRisk':total_score,
                     'maxScore':max_score,
+                    'score': per,
+                    'mov':mov,
                     'ques': scores_qna})
 
 

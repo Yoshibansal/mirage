@@ -1,5 +1,6 @@
 import requests, json
 from bs4 import BeautifulSoup
+import time
 
 def scrap(url):
     headers = {
@@ -37,7 +38,6 @@ def scrap(url):
         encry_uid = json.loads(json_encry_uid)['encry_uid']
         
         print(encry_uid)
-        
         
         print(response.status_code)
         
@@ -93,15 +93,16 @@ def scrap(url):
     response = requests.request("GET", url, headers=headers)
 
     if response.status_code == 200:
+        time.sleep(60)
         soup = BeautifulSoup(response.content, 'lxml')
-        
+        whatyouneed = []
         #section 1
         div = soup.find('div', attrs={'class': 'whatyouneed'})
         
         if div:
             headings = div.findAll('h4')
             descriptions = div.findAll('h5')
-            whatyouneed = []
+            
             for heading, description in zip(headings, descriptions):
                 inner = {
                     'head': heading.text.strip(),
@@ -110,12 +111,12 @@ def scrap(url):
                 
                 whatyouneed.append(inner)
                         
-            divs = soup.findAll('div', attrs={'class': 'mod_desc'})
+        divs = soup.findAll('div', attrs={'class': 'mod_desc'})
         
         missing = {}
         whatyouhave = {}
 
-        for i in range(2):
+        for i in range(len(divs)):
             divs2 = divs[i].findAll('div')
             if divs2 and len(divs2):
                 for div2 in divs2:
@@ -142,8 +143,7 @@ def scrap(url):
         data = {
             'whatyouneed': whatyouneed,
             'missing': missing,
-            'whatyouhave': whatyouhave,
-            'status': 'DONE'
+            'whatyouhave': whatyouhave
         }
         
         return data
