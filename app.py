@@ -1,7 +1,7 @@
 import utils, scraper, report, json
 from flask import Flask, request
 from firebase import firebase
-firebase = firebase.FirebaseApplication('https://sih2022-d8dd2-default-rtdb.asia-southeast1.firebasedatabase.app/', authentication=None)
+firebase = firebase.FirebaseApplication("FIREBASE_KEY", authentication=None)
 
 app = Flask(__name__)
 
