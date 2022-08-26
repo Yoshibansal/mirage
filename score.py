@@ -170,4 +170,4 @@ def readabilityScore(text):
 
   flags, date = utils.redFlags(text)
 
-  return (scoreMatrix, score, time, flags, date)
+  return (scoreMatrix, score, time, flags//2, date)

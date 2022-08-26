@@ -1,4 +1,6 @@
+from decimal import ROUND_UP
 import re
+from tkinter.messagebox import QUESTION
 from newspaper import Article, fulltext
 from bs4 import BeautifulSoup as bs
 from datetime import datetime
@@ -120,6 +122,7 @@ def to_date(string):
                     return None
 
 
+
 def redFlags(text):
   '''
     Use: Count for flags in privacy policy of terms and conditions
@@ -156,6 +159,7 @@ def redFlags(text):
   
   return flags, date
 
+model = Summarizer()
 
 # Summarizer of privacy policy using bert model
 def summarize(text):
@@ -163,7 +167,53 @@ def summarize(text):
         Using the BERT model
         It summarizes our text
     '''
-    model = Summarizer()
-    result = model(text, min_length=60)
+    global model
+    result = model(text, min_length=round(len(text.split())*(0.40)))
     full = ''.join(result)
     return full
+
+
+
+# Questions to map on
+def mapQues(que):
+  '''
+    return ques if one of the followings
+    else return 0
+  '''
+
+  # collect info
+  q1 = [["information"], ["collection", "collect"]]
+
+  # use info
+  q2 = [["information"], ["use"]]
+
+  # store info
+  q3 = [["information"], ["store"]]
+
+  # access
+  q4 = [['access'], ['information', 'profile', 'account']]
+
+  # share info
+  q5 = [['information'], ['share', 'disclosure']]
+
+  # change
+  q6 = [['privacy'], ['change', 'update', 'changes']]
+
+  # contact
+  q7 = [['us'], ['contact', 'contacting']]
+
+  f = 0
+  # QUESTION = [q1, q2, q3, q4, q5, q6, q7]
+  QUES = [["information", "access", "manage", "privacy", "policy", "us", "how to", "deleting"], ["collection", "collect", "use", "store", 'profile', 'account', 'share', 'shared', 'disclosure', 'change', 'changes', 'update', 'changes', 'contact', 'contacting', "access", "manage", "deleting"]]
+  for q in QUES:
+    for i in q:
+      if(i in que.lower()):
+        f += 1
+        break
+
+  if(f==2):
+    print(que)
+    return que
+
+  return 0
+
